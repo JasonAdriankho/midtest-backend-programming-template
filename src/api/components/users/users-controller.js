@@ -1,5 +1,6 @@
 const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
+const { round, ceil } = require('lodash');
 
 /**
  * Handle get list of users request
@@ -11,6 +12,24 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 async function getUsers(request, response, next) {
   try {
     const users = await usersService.getUsers();
+    const page_size = parseInt(request.query.page_size);
+    const page_number = parseInt(request.query.page_number);
+
+    const startIndex = (page_number - 1) * page_size;
+    const endIndex = page_number * page_size;
+
+    const data = {};
+
+    data.page_number = page_number; // Show current page
+    data.page_size = page_size; // Show current page maximum data storage
+    data.count = users.length; // Show all data count
+    data.total_pages = ceil(data.count / page_size); // Show total pages, use ceil to round up the total pages counting
+    data.has_previous_page = page_number > 1; // Show true or false for has previous page statement
+    data.has_next_page = data.total_pages > data.page_number; // Show true or false for has next page statement
+
+    data.data = users.slice(startIndex, endIndex);
+    response.json(data);
+
     return response.status(200).json(users);
   } catch (error) {
     return next(error);
