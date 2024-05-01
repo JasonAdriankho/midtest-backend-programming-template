@@ -20,22 +20,28 @@ async function getUsers(request, response, next) {
     const search = request.query.search;
 
     function sortUsers(users, sort) {
-      const [field, order] = sort.split(':'); // Split the parameters
-      return users.sort((a, b) => {
-        if (order == 'asc') {
+      const [field, order] = sort.split(':');
+
+      const sortedUsers = users.sort((a, b) => {
+        if (order === 'asc') {
           return a[field] > b[field] ? 1 : -1;
-        } else if (order == 'desc') {
+        } else if (order === 'desc') {
           return a[field] < b[field] ? 1 : -1;
         }
         return 0;
       });
+
+      return sortedUsers;
     }
 
     function searchUsers(users, search) {
       const [field, key] = search.split(':'); // Split the parameters
-      return users.filter((user) =>
-        user[field].toLowerCase().includes(key.toLowerCase())
-      );
+      const lowerKey = key.toLowerCase();
+
+      return users.filter((user) => {
+        const fieldValue = user[field].toLowerCase();
+        return fieldValue.includes(lowerKey);
+      });
     }
 
     search && (users = searchUsers(users, search));
