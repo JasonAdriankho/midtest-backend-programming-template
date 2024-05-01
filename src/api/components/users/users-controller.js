@@ -1,6 +1,8 @@
 const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 const { round, ceil } = require('lodash');
+const usersRoute = require('./users-route');
+// const express = require('express'); //INI NAMBAHIN INIATI ATI
 
 /**
  * Handle get list of users request
@@ -11,9 +13,33 @@ const { round, ceil } = require('lodash');
  */
 async function getUsers(request, response, next) {
   try {
-    const users = await usersService.getUsers();
+    let users = await usersService.getUsers();
     const page_size = parseInt(request.query.page_size);
     const page_number = parseInt(request.query.page_number);
+    const sort = request.query.sort;
+    const search = request.query.search;
+
+    function sortUsers(users, sort) {
+      const [field, order] = sort.split(':'); // Split the parameters
+      return users.sort((a, b) => {
+        if (order == 'asc') {
+          return a[field] > b[field] ? 1 : -1;
+        } else if (order == 'desc') {
+          return a[field] < b[field] ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+
+    function searchUsers(users, search) {
+      const [field, key] = search.split(':'); // Split the parameters
+      return users.filter((user) =>
+        user[field].toLowerCase().includes(key.toLowerCase())
+      );
+    }
+
+    search && (users = searchUsers(users, search));
+    sort && (users = sortUsers(users, sort));
 
     const startIndex = (page_number - 1) * page_size;
     const endIndex = page_number * page_size;
