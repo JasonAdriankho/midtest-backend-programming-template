@@ -1,27 +1,6 @@
 const usersRepository = require('./users-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
 
-// Fungsi untuk sorting pada data
-function sortUsers(users, sort) {
-  const [field, order] = sort.split(':');
-  return users.sort((a, b) => {
-    if (order == 'asc') {
-      return a[field] > b[field] ? 1 : -1;
-    } else if (order == 'desc') {
-      return a[field] < b[field] ? 1 : -1;
-    }
-    return 0;
-  });
-}
-
-// Fungsi untuk mencari data
-function searchUsers(users, search) {
-  const [field, key] = search.split(':');
-  return users.filter((user) =>
-    user[field].toLowerCase().includes(key.toLowerCase())
-  );
-}
-
 /**
  * Get list of users
  * @returns {Array}

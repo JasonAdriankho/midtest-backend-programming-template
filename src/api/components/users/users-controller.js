@@ -2,7 +2,7 @@ const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 const { round, ceil } = require('lodash');
 const usersRoute = require('./users-route');
-// const express = require('express'); //INI NAMBAHIN INIATI ATI
+// const express = require('express');
 
 /**
  * Handle get list of users request
@@ -19,37 +19,61 @@ async function getUsers(request, response, next) {
     const sort = request.query.sort;
     const search = request.query.search;
 
-    function sortUsers(users, sort) {
+    // Fungsi untuk sorting data berdasarkan parameter yang telah diberikan.
+    function sortUsersEmail(users, sort) {
       const [field, order] = sort.split(':');
+      let sortedUsersbyEmail = [...users];
 
-      const sortedUsers = users.sort((a, b) => {
-        if (order === 'asc') {
-          return a[field] > b[field] ? 1 : -1;
-        } else if (order === 'desc') {
-          return a[field] < b[field] ? 1 : -1;
+      let i = 0;
+      let sorted = false;
+      while (!sorted) {
+        sorted = true;
+        for (let a = 0; a < sortedUsersbyEmail.length - 1 - i; a++) {
+          if (
+            (order === 'asc' &&
+              sortedUsersbyEmail[a][field] >
+                sortedUsersbyEmail[a + 1][field]) ||
+            (order === 'desc' &&
+              sortedUsersbyEmail[a][field] < sortedUsersbyEmail[a + 1][field])
+          ) {
+            [sortedUsersbyEmail[a], sortedUsersbyEmail[a + 1]] = [
+              sortedUsersbyEmail[a + 1],
+              sortedUsersbyEmail[a],
+            ];
+            sorted = false;
+          }
         }
-        return 0;
-      });
+        i++;
+      }
 
-      return sortedUsers;
+      return sortedUsersbyEmail;
     }
 
-    function searchUsers(users, search) {
-      const [field, key] = search.split(':'); // Split the parameters
+    // Fungsi untuk search data berdasarkan parameter.
+    function searchUsersEmail(users, search) {
+      const [field, key] = search.split(':');
       const lowerKey = key.toLowerCase();
 
-      return users.filter((user) => {
-        const fieldValue = user[field].toLowerCase();
-        return fieldValue.includes(lowerKey);
-      });
+      let result = [];
+      let b = 0;
+      while (b < users.length) {
+        const fieldValue = users[b][field].toLowerCase();
+        if (fieldValue.includes(lowerKey)) {
+          result.push(users[b]);
+        }
+        b++;
+      }
+
+      return result;
     }
 
-    search && (users = searchUsers(users, search));
-    sort && (users = sortUsers(users, sort));
+    search && (users = searchUsersEmail(users, search));
+    sort && (users = sortUsersEmail(users, sort));
 
     const startIndex = (page_number - 1) * page_size;
     const endIndex = page_number * page_size;
 
+    // Pagination
     const data = {};
 
     data.page_number = page_number; // Show current page
