@@ -2,8 +2,7 @@ const passport = require('passport');
 const passportJWT = require('passport-jwt');
 
 const config = require('../../core/config');
-const { bankAcc, bankAcc } = require('../../models');
-const { noRek } = require('../../models/mbanks-Schema');
+const { bankAcc } = require('../../models');
 
 // Authenticate user based on the JWT token
 passport.use(

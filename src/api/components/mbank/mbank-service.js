@@ -1,5 +1,6 @@
 const mbankRepository = require('./mbank-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
+const { phoneNum } = require('../../../models/mbanks-Schema');
 
 /**
  * Get list of bank accounts
@@ -113,7 +114,7 @@ async function deletebankAcc(noRek) {
  * @param {string} accemail - Account Email
  * @returns {boolean}
  */
-async function bankAccemailIsRegistered(accemail) {
+async function accemailIsRegistered(accemail) {
   const bankAcc = await mbankRepository.getbankAccByEmail(accemail);
 
   if (bankAcc) {
@@ -168,7 +169,7 @@ module.exports = {
   createbankAcc,
   updatebankAcc,
   deletebankAcc,
-  bankAccemailIsRegistered,
+  accemailIsRegistered,
   bankAcccheckPassword,
   bankAccchangePassword,
 };

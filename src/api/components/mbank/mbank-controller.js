@@ -26,7 +26,7 @@ async function getbankAccs(request, response, next) {
  */
 async function getbankAcc(request, response, next) {
   try {
-    const bankAcc = await mbankService.getbankAcc(request.params.id);
+    const bankAcc = await mbankService.getbankAcc(request.params.noRek);
 
     if (!bankAcc) {
       throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Unknown account');
@@ -45,6 +45,7 @@ async function getbankAcc(request, response, next) {
  * @param {object} next - Express route middlewares
  * @returns {object} Response object or pass an error to the next route
  */
+
 async function createbankAcc(request, response, next) {
   try {
     const accname = request.body.accname;
@@ -61,10 +62,9 @@ async function createbankAcc(request, response, next) {
       );
     }
 
-    // Email must be unique
-    const accemailIsRegistered =
-      await mbankService.accemailIsRegistered(accemail);
-    if (accemailIsRegistered) {
+    // Check if email is already registered
+    const isEmailRegistered = await mbankService.accemailIsRegistered(accemail);
+    if (isEmailRegistered) {
       throw errorResponder(
         errorTypes.EMAIL_ALREADY_TAKEN,
         'Email is already registered'
@@ -179,7 +179,7 @@ async function changebankAccPassword(request, response, next) {
       throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'Wrong password');
     }
 
-    const changeSuccess = await mbankService.bankAccchangePassword(
+    const changeSuccess = await mbankService.changebankAccPassword(
       request.params.noRek,
       request.body.accpassword_new
     );

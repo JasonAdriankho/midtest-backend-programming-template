@@ -39,7 +39,7 @@ module.exports = {
     },
   },
 
-  bankAccchangePassword: {
+  changebankAccPassword: {
     body: {
       accpassword_old: joi.string().required().label('Old password'),
       accpassword_new: joiPassword

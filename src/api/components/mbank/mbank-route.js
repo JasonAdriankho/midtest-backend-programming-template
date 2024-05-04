@@ -10,7 +10,7 @@ const route = express.Router();
 module.exports = (app) => {
   app.use('/mbank', route);
 
-  // Get list of users
+  //   // Get list of users
   route.get('/', authenticationMiddleware, mbankController.getbankAccs);
 
   // Create user
@@ -38,12 +38,13 @@ module.exports = (app) => {
     authenticationMiddleware,
     mbankController.deletebankAcc
   );
+  1;
 
   // Change password
   route.post(
-    '/:noRek/bankAccchange-password',
+    '/:noRek/changebankAcc-password',
     authenticationMiddleware, //
-    celebrate(mbankValidator.backAccchangePassword),
-    mbankController.backAccchangePassword
+    celebrate(mbankValidator.changebankAccPassword),
+    mbankController.changebankAccPassword
   );
 };

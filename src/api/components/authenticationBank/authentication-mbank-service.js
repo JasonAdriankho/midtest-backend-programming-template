@@ -1,6 +1,6 @@
 const authenticationMbankRepository = require('./authentication-mbank-repository');
 const { generateToken } = require('../../../utils/session-token');
-const { passwordMatched } = require('../../../utils/password');
+const { passwordMatched } = require('../../../utils/accpassword');
 
 /**Check username and password for login.
  * @param {string} accemail - Account Email
