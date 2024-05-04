@@ -4,7 +4,6 @@ const {
   unlockedAt,
   userLocked,
 } = require('../../../models/users-schema');
-const LOCKEDDURATION = 1800000;
 
 /**
  * Get a list of users
@@ -87,33 +86,6 @@ async function changePassword(id, password) {
   return User.updateOne({ _id: id }, { $set: { password } });
 }
 
-// fungsi restart login
-async function restartLog(id) {
-  await User.updateOne(
-    { _id: id },
-    { $set: { userLocked: false, unlockedAt: 0 } }
-  ).catch(() => {});
-}
-
-// fungsi restart attempt
-async function restartAtt(id) {
-  await User.updateOne({ _id: id }, { $set: { logAtt: 0 } }).catch(() => {});
-}
-
-// fungsi penghitung attempt
-async function attCounter(id) {
-  await User.updateOne({ _id: id }, { $inc: { logAtt: 1 } }).catch(() => {});
-}
-
-// fungsi penguncian akun
-async function lockLogin(id) {
-  const lockedTime = new Date().getTime() + LOCKEDDURATION;
-  await User.updateOne(
-    { _id: id },
-    { $set: { userLocked: true, unlockedAt: lockedTime } }
-  ).catch(() => {});
-}
-
 module.exports = {
   getUsers,
   getUser,
@@ -122,8 +94,4 @@ module.exports = {
   deleteUser,
   getUserByEmail,
   changePassword,
-  restartLog,
-  restartAtt,
-  attCounter,
-  lockLogin,
 };

@@ -1,7 +1,6 @@
 const authenticationRepository = require('./authentication-repository');
 const { generateToken } = require('../../../utils/session-token');
 const { passwordMatched } = require('../../../utils/password');
-const usersRepository = require('../users/users-repository');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 const { toInteger } = require('lodash');
 const { userLocked } = require('../../../models/users-schema');
@@ -29,8 +28,8 @@ async function checkLoginCredentials(email, password) {
   const passwordChecked = await passwordMatched(password, userPassword);
 
   while (TimeToUnlock <= 0 && user.userLocked) {
-    await usersRepository.restartLog(user.id);
-    await usersRepository.restartAtt(user.id);
+    await authenticationRepository.restartLog(user.id);
+    await authenticationRepository.restartAtt(user.id);
 
     return {
       message:
@@ -58,7 +57,7 @@ async function checkLoginCredentials(email, password) {
 
     // Pemberitahuan bahwa akun telah terkunci karena jumlah attempt sudah mencapai jumlah maksimum.
     if (user.logAtt >= 4) {
-      await usersRepository.lockLogin(user.id);
+      await authenticationRepository.lockLogin(user.id);
       throw errorResponder(
         errorTypes.FORBIDDEN,
         `Current Attempts Has Reached ${user.logAtt + 1} Account is locked`
@@ -68,7 +67,7 @@ async function checkLoginCredentials(email, password) {
     // Menghitung dan menampilkan jumlah attempt kesalahan memasukkan password.
     if (!passwordChecked) {
       const userId = user.id;
-      await usersRepository.attCounter(userId);
+      await authenticationRepository.attCounter(userId);
       const currentAtt = user.logAtt + 1;
       const errorMessage = `Incorrect Password. Current Attempts: ${currentAtt}`;
       throw errorResponder(errorTypes.INVALID_PASSWORD, errorMessage);
@@ -76,7 +75,7 @@ async function checkLoginCredentials(email, password) {
 
     // Jika password benar maka user masuk
     // Login Attempt direset
-    await usersRepository.restartAtt(user.id);
+    await authenticationRepository.restartAtt(user.id);
 
     // menampilkan email, name, userid, dan token user jika berhasil memasukkan password yang benar.
     return {
