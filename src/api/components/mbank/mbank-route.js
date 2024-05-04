@@ -42,7 +42,7 @@ module.exports = (app) => {
   // Change password
   route.post(
     '/:noRek/bankAccchange-password',
-    authenticationMiddleware,
+    authenticationMiddleware, //
     celebrate(mbankValidator.backAccchangePassword),
     mbankController.backAccchangePassword
   );

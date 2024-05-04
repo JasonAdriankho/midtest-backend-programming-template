@@ -58,6 +58,11 @@ app.use((error, request, response, next) => {
     ctx.user_id = request.user.userId || request.user.username || null;
   }
 
+  ////////////////////////////////////////////////////
+  if (request.bankAcc) {
+    ctx.bankAcc_noRek = request.bankAcc.bankAccnoRek;
+  }
+
   // If this error is thrown by our code execution, then also log the stack trance
   if (error.stack) {
     ctx.stack = error.stack;
