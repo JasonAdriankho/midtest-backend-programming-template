@@ -10,11 +10,11 @@ async function getbankAccs() {
 
 /**
  * Get user detail
- * @param {string} noRek - noRek
+ * @param {string} id - id
  * @returns {Promise}
  */
-async function getbankAcc(noRek) {
-  return bankAcc.findBynoRek(noRek);
+async function getbankAcc(id) {
+  return bankAcc.findById(id);
 }
 
 /**
@@ -36,15 +36,15 @@ async function createbankAcc(accname, accemail, phoneNum, accpassword) {
 
 /**
  * Update existing user
- * @param {string} noRek - Account noRek
+ * @param {string} id - Account id
  * @param {string} accname - Account Name
  * @param {string} accemail - Account Email
  * @returns {Promise}
  */
-async function updatebankAcc(noRek, accname, accemail) {
+async function updatebankAcc(id, accname, accemail) {
   return bankAcc.updateOne(
     {
-      _noRek: noRek,
+      _id: id,
     },
     {
       $set: {
@@ -57,11 +57,11 @@ async function updatebankAcc(noRek, accname, accemail) {
 
 /**
  * Delete a user
- * @param {string} noRek - Account noRek
+ * @param {string} id - Account id
  * @returns {Promise}
  */
-async function deletebankAcc(bankAcc) {
-  return bankAcc.deleteOne({ _noRek: noRek });
+async function deletebankAcc(id) {
+  return bankAcc.deleteOne({ _id: id });
 }
 
 /**
@@ -75,12 +75,12 @@ async function getbankAccByEmail(accemail) {
 
 /**
  * Update user password
- * @param {string} noRek - Account noRek
+ * @param {string} id - Account id
  * @param {string} accpassword - New hashed password
  * @returns {Promise}
  */
-async function changebankAccPassword(noRek, accpassword) {
-  return bankAcc.updateOne({ _noRek: noRek }, { $set: { accpassword } });
+async function changebankAccPassword(id, accpassword) {
+  return bankAcc.updateOne({ _id: id }, { $set: { accpassword } });
 }
 
 module.exports = {

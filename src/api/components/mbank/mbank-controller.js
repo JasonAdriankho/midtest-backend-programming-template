@@ -26,7 +26,7 @@ async function getbankAccs(request, response, next) {
  */
 async function getbankAcc(request, response, next) {
   try {
-    const bankAcc = await mbankService.getbankAcc(request.params.noRek);
+    const bankAcc = await mbankService.getbankAcc(request.params.id);
 
     if (!bankAcc) {
       throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Unknown account');
@@ -99,7 +99,7 @@ async function createbankAcc(request, response, next) {
  */
 async function updatebankAcc(request, response, next) {
   try {
-    const noRek = request.params.noRek;
+    const id = request.params.id;
     const accname = request.body.accname;
     const accemail = request.body.accemail;
 
@@ -113,7 +113,7 @@ async function updatebankAcc(request, response, next) {
       );
     }
 
-    const success = await mbankService.updatebankAcc(noRek, accname, accemail);
+    const success = await mbankService.updatebankAcc(id, accname, accemail);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -121,7 +121,7 @@ async function updatebankAcc(request, response, next) {
       );
     }
 
-    return response.status(200).json({ noRek });
+    return response.status(200).json({ id });
   } catch (error) {
     return next(error);
   }
@@ -136,9 +136,9 @@ async function updatebankAcc(request, response, next) {
  */
 async function deletebankAcc(request, response, next) {
   try {
-    const noRek = request.params.noRek;
+    const id = request.params.id;
 
-    const success = await mbankService.deletebankAcc(noRek);
+    const success = await mbankService.deletebankAcc(id);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -146,7 +146,7 @@ async function deletebankAcc(request, response, next) {
       );
     }
 
-    return response.status(200).json({ noRek });
+    return response.status(200).json({ id });
   } catch (error) {
     return next(error);
   }
@@ -171,8 +171,8 @@ async function changebankAccPassword(request, response, next) {
 
     // Check old password
     if (
-      !(await mbankService.bankAcccheckPassword(
-        request.params.noRek,
+      !(await mbankService.changebankAccPassword(
+        request.params.id,
         request.body.accpassword_old
       ))
     ) {
@@ -180,7 +180,7 @@ async function changebankAccPassword(request, response, next) {
     }
 
     const changeSuccess = await mbankService.changebankAccPassword(
-      request.params.noRek,
+      request.params.id,
       request.body.accpassword_new
     );
 
@@ -191,7 +191,7 @@ async function changebankAccPassword(request, response, next) {
       );
     }
 
-    return response.status(200).json({ noRek: request.params.noRek });
+    return response.status(200).json({ id: request.params.id });
   } catch (error) {
     return next(error);
   }

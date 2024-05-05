@@ -1,6 +1,7 @@
 const authenticationMbankRepository = require('./authentication-mbank-repository');
 const { generateToken } = require('../../../utils/session-token');
 const { passwordMatched } = require('../../../utils/accpassword');
+const { phoneNum } = require('../../../models/mbanks-Schema');
 
 /**Check username and password for login.
  * @param {string} accemail - Account Email
@@ -27,7 +28,8 @@ async function checkLoginCredentials(accemail, accpassword) {
     return {
       accemail: bankAcc.accemail,
       accname: bankAcc.accname,
-      bankAcc_noRek: bankAcc.noRek,
+      bankAcc_id: bankAcc.id,
+      phoneNum: bankAcc.phoneNum,
       token: generateToken(bankAcc.accemail, bankAcc.noRek),
     };
   }

@@ -4,6 +4,7 @@ const { hashPassword } = require('../src/utils/password');
 
 const accname = 'Administrator';
 const accemail = 'admin@example.com';
+const phoneNum= '123564353422'
 const accpassword = '123456';
 
 logger.info('Creating default bankAccs');
@@ -23,6 +24,7 @@ logger.info('Creating default bankAccs');
     await bankAcc.create({
       accname,
       accemail,
+      phoneNum,
       accpassword: hashedPassword,
     });
   } catch (e) {

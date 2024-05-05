@@ -34,15 +34,14 @@ module.exports = (app) => {
 
   // Delete user
   route.delete(
-    '/:noRek',
+    '/:id',
     authenticationMiddleware,
     mbankController.deletebankAcc
   );
-  1;
 
   // Change password
   route.post(
-    '/:noRek/changebankAcc-password',
+    '/:id/changebankAcc-password',
     authenticationMiddleware, //
     celebrate(mbankValidator.changebankAccPassword),
     mbankController.changebankAccPassword

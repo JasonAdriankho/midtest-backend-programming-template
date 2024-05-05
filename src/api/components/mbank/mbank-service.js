@@ -13,9 +13,10 @@ async function getbankAccs() {
   for (let i = 0; i < bankAccs.length; i += 1) {
     const bankAcc = bankAccs[i];
     results.push({
-      noRek: bankAcc.noRek,
+      id: bankAcc.id,
       accname: bankAcc.accname,
       accemail: bankAcc.accemail,
+      phoneNum: bankAcc.phoneNum,
     });
   }
 
@@ -24,11 +25,11 @@ async function getbankAccs() {
 
 /**
  * Get bank account detail
- * @param {string} noRek - noRek
+ * @param {string} id - id
  * @returns {Object}
  */
-async function getbankAcc(noRek) {
-  const bankAcc = await mbankRepository.getbankAcc(noRek);
+async function getbankAcc(id) {
+  const bankAcc = await mbankRepository.getbankAcc(id);
 
   // Bank Account not found
   if (!bankAcc) {
@@ -36,7 +37,7 @@ async function getbankAcc(noRek) {
   }
 
   return {
-    noRek: bankAcc.noRek,
+    id: bankAcc.id,
     accname: bankAcc.accname,
     accemail: bankAcc.accemail,
   };
@@ -50,12 +51,17 @@ async function getbankAcc(noRek) {
  * @param {string} accpassword - Account Password
  * @returns {boolean}
  */
-async function createbankAcc(accname, accemail, accpassword) {
+async function createbankAcc(accname, accemail, phoneNum, accpassword) {
   // Hash password
   const hashedPassword = await hashPassword(accpassword);
 
   try {
-    await mbankRepository.createbankAcc(accname, accemail, hashedPassword);
+    await mbankRepository.createbankAcc(
+      accname,
+      accemail,
+      phoneNum,
+      hashedPassword
+    );
   } catch (err) {
     return null;
   }
@@ -65,13 +71,13 @@ async function createbankAcc(accname, accemail, accpassword) {
 
 /**
  * Update existing bank account
- * @param {string} noRek - noRek
+ * @param {string} id - id
  * @param {string} accname - Account Name
  * @param {string} accemail - Account Email
  * @returns {boolean}
  */
-async function updatebankAcc(noRek, accname, accemail) {
-  const bankAcc = await mbankRepository.getbankAcc(noRek);
+async function updatebankAcc(id, accname, accemail) {
+  const bankAcc = await mbankRepository.getbankAcc(id);
 
   // Bank Account not found
   if (!bankAcc) {
@@ -79,7 +85,7 @@ async function updatebankAcc(noRek, accname, accemail) {
   }
 
   try {
-    await mbankRepository.updatebankAcc(noRek, accname, accemail);
+    await mbankRepository.updatebankAcc(id, accname, accemail);
   } catch (err) {
     return null;
   }
@@ -89,11 +95,11 @@ async function updatebankAcc(noRek, accname, accemail) {
 
 /**
  * Delete bank account
- * @param {string} noRek - noRek
+ * @param {string} id - id
  * @returns {boolean}
  */
-async function deletebankAcc(noRek) {
-  const bankAcc = await mbankRepository.getbankAcc(noRek);
+async function deletebankAcc(id) {
+  const bankAcc = await mbankRepository.getbankAcc(id);
 
   // Bank Account not found
   if (!bankAcc) {
@@ -101,7 +107,7 @@ async function deletebankAcc(noRek) {
   }
 
   try {
-    await mbankRepository.deletebankAcc(noRek);
+    await mbankRepository.deletebankAcc(id);
   } catch (err) {
     return null;
   }
@@ -126,23 +132,23 @@ async function accemailIsRegistered(accemail) {
 
 /**
  * Check whether the password is correct
- * @param {string} bankAccnoRek - bankAcc noRek
+ * @param {string} bankAccid - bankAcc id
  * @param {string} accpassword - Account Password
  * @returns {boolean}
  */
-async function bankAcccheckPassword(bankAccnoRek, accpassword) {
-  const bankAcc = await mbankRepository.getbankAcc(bankAccnoRek);
+async function bankAcccheckPassword(id, accpassword) {
+  const bankAcc = await mbankRepository.getbankAcc(id);
   return passwordMatched(accpassword, bankAcc.accpassword);
 }
 
 /**
  * Change user password
- * @param {string} bankAccnoRek - bankAcc noRek
+ * @param {string} bankAccid - bankAcc id
  * @param {string} accpassword - Account Password
  * @returns {boolean}
  */
-async function bankAccchangePassword(bankAccnoRek, accpassword) {
-  const bankAcc = await mbankRepository.getbankAcc(bankAccnoRek);
+async function changebankAccPassword(bankAccid, accpassword) {
+  const bankAcc = await mbankRepository.getbankAcc(bankAccid);
 
   // Check if Bank Account not found
   if (!bankAcc) {
@@ -151,8 +157,8 @@ async function bankAccchangePassword(bankAccnoRek, accpassword) {
 
   const hashedPassword = await hashPassword(accpassword);
 
-  const changeSuccess = await mbankRepository.bankAccchangePassword(
-    bankAccnoRek,
+  const changeSuccess = await mbankRepository.changebankAccPassword(
+    bankAccid,
     hashedPassword
   );
 
@@ -171,5 +177,5 @@ module.exports = {
   deletebankAcc,
   accemailIsRegistered,
   bankAcccheckPassword,
-  bankAccchangePassword,
+  changebankAccPassword,
 };
