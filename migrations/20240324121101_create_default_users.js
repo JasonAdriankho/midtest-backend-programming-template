@@ -31,3 +31,4 @@ logger.info('Creating default users');
     process.exit(0);
   }
 })();
+//

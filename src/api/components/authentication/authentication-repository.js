@@ -9,7 +9,7 @@ async function getUserByEmail(email) {
   return User.findOne({ email });
 }
 
-// fungsi restart login
+// Restart Login Function
 async function restartLog(id) {
   await User.updateOne(
     { _id: id },
@@ -17,17 +17,17 @@ async function restartLog(id) {
   ).catch(() => {});
 }
 
-// fungsi restart attempt
+// Restart Attempt Function
 async function restartAtt(id) {
   await User.updateOne({ _id: id }, { $set: { logAtt: 0 } }).catch(() => {});
 }
 
-// fungsi penghitung attempt
+// Attempt Counter Function
 async function attCounter(id) {
   await User.updateOne({ _id: id }, { $inc: { logAtt: 1 } }).catch(() => {});
 }
 
-// fungsi penguncian akun
+// Lock Account Function
 async function lockLogin(id) {
   const lockedTime = new Date().getTime() + LOCKEDDURATION;
   await User.updateOne(
@@ -43,3 +43,4 @@ module.exports = {
   restartLog,
   lockLogin,
 };
+//

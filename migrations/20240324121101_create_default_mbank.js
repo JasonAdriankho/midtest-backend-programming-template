@@ -4,7 +4,7 @@ const { hashPassword } = require('../src/utils/password');
 
 const accname = 'Administrator';
 const accemail = 'admin@example.com';
-const phoneNum= '123564353422'
+const phoneNum = '123564353422';
 const accpassword = '123456';
 
 logger.info('Creating default bankAccs');
@@ -33,3 +33,4 @@ logger.info('Creating default bankAccs');
     process.exit(0);
   }
 })();
+//

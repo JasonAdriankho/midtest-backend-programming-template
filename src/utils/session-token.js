@@ -46,3 +46,4 @@ function generateToken(accemail, bankAccnoRek) {
 module.exports = {
   generateToken,
 };
+//

@@ -25,7 +25,7 @@ async function getbankAccs() {
 
 /**
  * Get bank account detail
- * @param {string} id - id
+ * @param {string} id - Account id
  * @returns {Object}
  */
 async function getbankAcc(id) {
@@ -71,7 +71,7 @@ async function createbankAcc(accname, accemail, phoneNum, accpassword) {
 
 /**
  * Update existing bank account
- * @param {string} id - id
+ * @param {string} id - Account id
  * @param {string} accname - Account Name
  * @param {string} accemail - Account Email
  * @returns {boolean}
@@ -95,7 +95,7 @@ async function updatebankAcc(id, accname, accemail) {
 
 /**
  * Delete bank account
- * @param {string} id - id
+ * @param {string} id - Account id
  * @returns {boolean}
  */
 async function deletebankAcc(id) {
@@ -179,3 +179,4 @@ module.exports = {
   bankAcccheckPassword,
   changebankAccPassword,
 };
+//

@@ -41,13 +41,12 @@ async function checkLoginCredentials(email, password) {
   // login attempt as successful when the `user` is found (by email) and
   // the password matches.
 
-  // Fungsi untuk login attempt
   try {
     if (!user) {
       throw errorResponder(errorTypes.NOT_FOUND, `User not found.`);
     }
 
-    // Untuk menunjukkan bahwa akun terkunci selama 30 menit
+    // Show that the user account / email is locked for 30 mins
     if (user.userLocked) {
       throw errorResponder(
         errorTypes.FORBIDDEN,
@@ -55,7 +54,7 @@ async function checkLoginCredentials(email, password) {
       );
     }
 
-    // Pemberitahuan bahwa akun telah terkunci karena jumlah attempt sudah mencapai jumlah maksimum.
+    // Tell the user that the account ahs been locked, because the login attempt has reach the max
     if (user.logAtt >= 4) {
       await authenticationRepository.lockLogin(user.id);
       throw errorResponder(
@@ -64,7 +63,7 @@ async function checkLoginCredentials(email, password) {
       );
     }
 
-    // Menghitung dan menampilkan jumlah attempt kesalahan memasukkan password.
+    // Counting the current failed attempt and displaying it
     if (!passwordChecked) {
       const userId = user.id;
       await authenticationRepository.attCounter(userId);
@@ -73,11 +72,11 @@ async function checkLoginCredentials(email, password) {
       throw errorResponder(errorTypes.INVALID_PASSWORD, errorMessage);
     }
 
-    // Jika password benar maka user masuk
-    // Login Attempt direset
+    // If password is correct, then user will be able to login
+    // Login Attempt will be reset
     await authenticationRepository.restartAtt(user.id);
 
-    // menampilkan email, name, userid, dan token user jika berhasil memasukkan password yang benar.
+    // Display email, name, user_id, token. If user login successfully
     return {
       email: user.email,
       name: user.name,
@@ -93,3 +92,4 @@ async function checkLoginCredentials(email, password) {
 module.exports = {
   checkLoginCredentials,
 };
+//
